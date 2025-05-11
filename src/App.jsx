@@ -5,34 +5,54 @@ import StatusGoalBar from './components/StatusGoalBar';
 import TrendAndBMI from './components/TrendAndBMI';
 import WeightHistory from './components/WeightHistory';
 
+
 function App() {
   const [showPopUp, setShowPopUp] = useState(false);
   const [currentWeight, setCurrentWeight] = useState(69);
   const [heightCm, setHeightCm] = useState(170);
   const [goalWeight, setGoalWeight] = useState(75);
 
-  const [weightHistory, setWeightHistory] = useState(() => {
-    const saved = localStorage.getItem('weightHistory');
-    return saved ? JSON.parse(saved) : [{ date: new Date().toISOString().slice(0, 10), weight: 69 }];
+  const [weightHistory, setWeightHistory] = useState([]);
+
+  useEffect(() => {
+    fetch('http://localhost:5000/weights')
+      .then(res => res.json())
+      .then(data => {
+        setWeightHistory(data);
+        if (data.length > 0) {
+          setCurrentWeight(data[data.length - 1].weight);
+        }
+      })
+      .catch(err => console.error('Error fetching weights:', err));
+  }, []);
+
+
+
+  const saveNewWeight = async (newWeight) => {
+    const today = new Date().toISOString().slice(0, 10);
+  
+    const res = await fetch('http://localhost:5000/weights', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ date: today, weight: newWeight })
+    });
+  
+    const saved = await res.json();
+  
+    // ⬇️ Add this line here:
+    setCurrentWeight(newWeight);
+  
+    setWeightHistory(prev => [...prev, saved]);
+  };
+
+
+ const handleDelete = async (id) => {
+  await fetch(`http://localhost:5000/weights/${id}`, {
+    method: 'DELETE',
   });
 
-  // Whenever weightHistory changes, update localStorage
-  useEffect(() => {
-    localStorage.setItem('weightHistory', JSON.stringify(weightHistory));
-  }, [weightHistory]);
-
-  const saveNewWeight = (newWeight) => {
-    const today = new Date().toISOString().slice(0, 10);
-    setCurrentWeight(newWeight);
-    setWeightHistory(prev => [
-      ...prev,
-      { id: Date.now(), date: today, weight: newWeight }  // <-- added id
-    ]);
-  };
-
-  const handleDelete = (id) => {
-    setWeightHistory(prevHistory => prevHistory.filter(entry => entry.id !== id));
-  };
+  setWeightHistory(prev => prev.filter(entry => entry.id !== id));
+};
 
   return (
     <>
