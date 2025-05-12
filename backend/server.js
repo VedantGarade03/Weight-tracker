@@ -1,114 +1,60 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const fs = require('fs');
+const { initializeApp } = require('firebase/app');
+const { getFirestore, collection, doc, getDoc, setDoc, updateDoc, deleteDoc, arrayUnion } = require('firebase/firestore');
+const bcrypt = require('bcrypt'); // Keep bcrypt for now, but PLEASE address later
 
 const app = express();
-const PORT = 5000;
-const DATA_FILE = './data.json';
+const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(bodyParser.json());
 
-// === Helper functions ===
-function loadData() {
-  if (!fs.existsSync(DATA_FILE)) return { users: [] };
-  return JSON.parse(fs.readFileSync(DATA_FILE));
-}
+// Firebase configuration (Replace placeholders DIRECTLY - BAD PRACTICE for production)
+const firebaseConfig = {
+  apiKey: "AIzaSyBMCCBx1TNxN20TG3lVm8WwSqGk0J09In8",
+  authDomain: "weight-tracker03.firebaseapp.com",
+  projectId: "weight-tracker03",
+  storageBucket: "weight-tracker03.firebasestorage.app",
+  messagingSenderId: "588570072487",
+  appId: "1:588570072487:web:d736e187b39c063a8d1282",
+  measurementId: "G-CY5LL4KCVJ"
+};
+const firebaseApp = initializeApp(firebaseConfig);
+const db = getFirestore(firebaseApp);
 
-function saveData(data) {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
-}
-
-function getUser(data, identifier) {
-  return data.users.find(u => u.username === identifier || u.email === identifier);
-}
-
-// === Routes ===
-
-// Signup route
-app.post('/signup', (req, res) => {
+// Your routes - signup, login, weights (but REMOVE any fs, loadData, saveData)
+// Example (adjust your actual routes):
+app.post('/signup', async (req, res) => {
   const { email, username, password } = req.body;
-  const data = loadData();
+  try {
+    const usersRef = collection(db, 'users');
+    const userDoc = await getDoc(doc(usersRef, username));
 
-  const existingUser = getUser(data, username);
-  if (existingUser) {
-    return res.status(400).json({ message: 'Username already exists' });
-  }
-    const existingEmail = data.users.find(u => u.email === email);
-    if(existingEmail){
-         return res.status(400).json({ message: 'Email already exists' });
+    if (userDoc.exists()) {
+      return res.status(400).json({ message: 'Username already exists' });
     }
 
-  const newUser = { email, username, password, weights: [] };
-  data.users.push(newUser);
-  saveData(data);
+    // DO NOT SKIP HASHING IN REAL PRODUCTION
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-  res.status(201).json({ username });
-});
+    await setDoc(doc(usersRef, username), {
+      email,
+      username,
+      password: hashedPassword,
+      weights: []
+    });
 
-// Login route
-app.post('/login', (req, res) => {
-  const { username, password } = req.body;
-  const data = loadData();
+    res.status(201).json({ username });
 
-  const user = getUser(data, username); // Use the common getUser function
-  if (user && user.password === password) {
-    res.json({ username: user.username });
-  } else {
-    res.status(401).json({ message: 'Invalid credentials' });
+  } catch (error) {
+    console.error('Error signing up:', error);
+    res.status(500).json({ message: 'Signup failed' });
   }
 });
 
-// Get weights for a specific user
-app.get('/weights/:username', (req, res) => {
-  const { username } = req.params;
-  const data = loadData();
-  const user = getUser(data, username);
-
-  if (!user) {
-    return res.status(404).json({ message: 'User not found' });
-  }
-
-  res.json(user.weights);
-});
-
-// Add a new weight for a specific user
-app.post('/weights/:username', (req, res) => {
-  const { username } = req.params;
-  const data = loadData();
-  const user = getUser(data, username);
-
-  if (!user) {
-    return res.status(404).json({ message: 'User not found' });
-  }
-
-  const newWeight = { id: Date.now(), ...req.body };
-  user.weights.push(newWeight);
-  saveData(data);
-
-  res.json(newWeight);
-});
-
-// Delete a weight by ID for a specific user
-app.delete('/weights/:username/:id', (req, res) => {
-  const { username, id } = req.params;
-  const data = loadData();
-  const user = getUser(data, username);
-
-  if (!user) {
-    return res.status(404).json({ message: 'User not found' });
-  }
-
-  const weightIndex = user.weights.findIndex(w => w.id === Number(id));
-  if (weightIndex === -1) {
-    return res.status(404).json({ message: 'Weight entry not found' });
-  }
-
-  user.weights.splice(weightIndex, 1);
-  saveData(data);
-  res.json({ message: 'Weight entry deleted successfully' });
-});
+// ... (Other routes - login, weights)
 
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
