@@ -110,65 +110,97 @@ function Signup({ onLogin }) {
   if (showLogin) {
     return (
       <div className="flex items-center justify-center h-screen bg-gray-100" id="signup-form">
-  <form className="bg-white p-8 rounded-lg shadow-md w-full max-w-sm" onSubmit={(e) => {
-    e.preventDefault();
-    const username = e.target.username.value;
-    const password = e.target.password.value;
-    onLogin(username);
-  }}>
-    <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">Login</h2>
-    {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-    <input 
-      type="text" 
-      placeholder="Username" 
-      name="username" 
-      className="w-full mb-4 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
-      required 
-    />
-    <input 
-      type="password" 
-      placeholder="Password" 
-      name="password" 
-      className="w-full mb-6 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
-      required 
-    />
-    <button 
-      type="submit" 
-      className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md w-full transition duration-200 ease-in-out"
-    >
-      Login
-    </button>
-    <p className="text-center text-gray-600 mt-4">
-      Don't have an account?{' '}
-      <button 
-        type="button" 
-        onClick={() => setShowLogin(false)} 
-        className="text-blue-500 hover:text-blue-700 font-semibold cursor-pointer"
-      >
-        Sign Up
-      </button>
-    </p>
-  </form>
-</div>
+        <form className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm" onSubmit={(e) => {
+          e.preventDefault();
+          const username = e.target.username.value;
+          const password = e.target.password.value;
+          onLogin(username);
+        }}>
+          <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">Login</h2>
+          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+          <input 
+            type="text" 
+            placeholder="Username" 
+            name="username" 
+            className="w-full mb-4 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+            required 
+          />
+          <input 
+            type="password" 
+            placeholder="Password" 
+            name="password" 
+            className="w-full mb-6 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+            required 
+          />
+          <button 
+            type="submit" 
+            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md w-full transition duration-200 ease-in-out"
+          >
+            Login
+          </button>
+          <p className="text-center text-gray-600 mt-4">
+            Don't have an account?{' '}
+            <button 
+              type="button" 
+              onClick={() => setShowLogin(false)} 
+              className="text-blue-500 hover:text-blue-700 font-semibold cursor-pointer"
+            >
+              Sign Up
+            </button>
+          </p>
+        </form>
+      </div>
     );
   }
-
+  
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100" id="signup-form">
-      <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md w-full max-w-sm">
-        <h2 className="text-2xl font-bold mb-4 text-center">Sign Up</h2>
+      <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm">
+        <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">Sign Up</h2>
         {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full mb-4 px-4 py-2 border rounded" required />
-        <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} className="w-full mb-4 px-4 py-2 border rounded" required />
-        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full mb-6 px-4 py-2 border rounded" required />
-        <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">Sign Up</button>
-        <p className="text-center text-gray-600 mt-4">Already have an account?{' '}
-          <button type="button" onClick={handleShowLogin} className="text-blue-500 hover:text-blue-700 font-semibold cursor-pointer">Login</button>
+        <input 
+          type="email" 
+          placeholder="Email" 
+          value={email} 
+          onChange={(e) => setEmail(e.target.value)} 
+          className="w-full mb-4 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+          required 
+        />
+        <input 
+          type="text" 
+          placeholder="Username" 
+          value={username} 
+          onChange={(e) => setUsername(e.target.value)} 
+          className="w-full mb-4 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+          required 
+        />
+        <input 
+          type="password" 
+          placeholder="Password" 
+          value={password} 
+          onChange={(e) => setPassword(e.target.value)} 
+          className="w-full mb-6 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+          required 
+        />
+        <button 
+          type="submit" 
+          className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md w-full transition duration-200 ease-in-out"
+        >
+          Sign Up
+        </button>
+        <p className="text-center text-gray-600 mt-4">
+          Already have an account?{' '}
+          <button 
+            type="button" 
+            onClick={handleShowLogin} 
+            className="text-blue-500 hover:text-blue-700 font-semibold cursor-pointer"
+          >
+            Login
+          </button>
         </p>
       </form>
     </div>
-  );
-}
+  );}
 
 
 function App() {
