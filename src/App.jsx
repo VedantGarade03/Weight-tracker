@@ -154,7 +154,7 @@ function Signup({ onLogin }) {
   }
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100" id="signup-form">
+    <div className="flex items-center justify-center h-screen bg-gray-100" id="signup-form" style={{ display: 'flex' }}>
       <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm">
         <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">Sign Up</h2>
         {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
