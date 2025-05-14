@@ -7,6 +7,7 @@ import WeightHistory from './components/WeightHistory';
 import './App.css';
 
 const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+console.log('Using BASE_URL:', BASE_URL);
 
 // Login Component
 function Login({ onLogin }) {
