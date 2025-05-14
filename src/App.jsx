@@ -226,8 +226,8 @@ function App() {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [showPopUp, setShowPopUp] = useState(false);
   const [currentWeight, setCurrentWeight] = useState(0);
-  const [heightCm, setHeightCm] = useState(0);
-  const [goalWeight, setGoalWeight] = useState(0);
+  const [heightCm, setHeightCm] = useState(170);
+  const [goalWeight, setGoalWeight] = useState(75);
   const [weightHistory, setWeightHistory] = useState([]);
   const [loading, setLoading] = useState(true); // Add loading state
 
