@@ -15,7 +15,7 @@ function Login({ onLogin }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const res = await fetch('http://localhost:5000/login', {
+    const res = await fetch('https://weight-tracker-4d04.onrender.com/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password }),
@@ -91,7 +91,7 @@ function Signup({ onLogin }) {
       return;
     }
 
-    const res = await fetch('http://localhost:5000/signup', {
+    const res = await  fetch('https://weight-tracker-4d04.onrender.com/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, username, password }),
@@ -233,7 +233,7 @@ function App() {
   useEffect(() => {
     if (!loggedInUser) return;
 
-    fetch(`http://localhost:5000/weights/${loggedInUser}`)
+     fetch('https://weight-tracker-4d04.onrender.com/login') 
       .then(res => res.json())
       .then(data => {
         setWeightHistory(data);
