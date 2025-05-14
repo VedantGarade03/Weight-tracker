@@ -186,7 +186,7 @@ function App() {
   const saveNewWeight = async (newWeight) => {
     const today = new Date().toISOString().slice(0, 10);
 
-    const res = await fetch(`http://localhost:5000/weights/${loggedInUser}`, {
+    const res = await fetch(`${BASE_URL}/weights/${loggedInUser}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ weight: newWeight, date: today }),
@@ -203,7 +203,7 @@ function App() {
   };
 
   const handleDeleteWeight = async (id) => {
-    const res = await fetch(`http://localhost:5000/weights/${loggedInUser}/${id}`, {
+    const res = await fetch(`${BASE_URL}/weights/${loggedInUser}/${id}`, {
       method: 'DELETE',
     });
 
