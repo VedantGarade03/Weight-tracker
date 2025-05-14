@@ -161,11 +161,11 @@ app.get('/users/:username/profile', async (req, res) => {
     try {
       const userRef = doc(db, 'users', username);
       const userDoc = await getDoc(userRef);
-  
+
       if (!userDoc.exists()) {
         return res.status(404).json({ message: 'User not found' });
       }
-  
+
       const userData = userDoc.data();
       res.status(200).json({ 
         username: userData.username,
@@ -178,7 +178,7 @@ app.get('/users/:username/profile', async (req, res) => {
       res.status(500).json({ message: 'Failed to fetch user profile' });
     }
   });
-  
+
 
 // Update user profile (height and goal weight)
 app.put('/users/:username/profile', async (req, res) => {
