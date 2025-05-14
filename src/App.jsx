@@ -109,7 +109,7 @@ function Signup({ onLogin }) {
 
   if (showLogin) {
     return (
-      <div className="flex items-center justify-center h-screen bg-gray-100" id="signup-form">
+      <div className="flex items-center justify-center h-screen bg-gray-100" id="signup-form" style={{ display: 'flex' }}>
         <form className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm" onSubmit={(e) => {
           e.preventDefault();
           const username = e.target.username.value;
