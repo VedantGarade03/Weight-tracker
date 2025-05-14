@@ -5,6 +5,13 @@ const { initializeApp } = require('firebase/app');
 const { getFirestore, collection, doc, getDoc, setDoc, updateDoc } = require('firebase/firestore');
 const bcrypt = require('bcrypt');
 
+
+app.use(cors({
+  origin: 'https://weight-tracker-lovat.vercel.app',
+  methods: ['GET', 'POST', 'DELETE'],
+  credentials: true
+}));
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -151,3 +158,5 @@ app.get('/weights/:username', async (req, res) => {
     res.status(500).json({ message: 'Failed to fetch weights' });
   }
 });
+
+
