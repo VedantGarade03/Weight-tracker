@@ -111,6 +111,8 @@ function Signup({ onLogin }) {
   if (showLogin) {
     return (
       <div className="flex items-center justify-center h-screen bg-gray-100" id="signup-form" style={{ display: 'flex' }}>
+
+      <div className="flex items-center justify-center h-screen bg-gray-100" id="signup-form" style={{ display: 'flex' }}>
         <form className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm" onSubmit={(e) => {
           e.preventDefault();
           const username = e.target.username.value;
@@ -125,18 +127,18 @@ function Signup({ onLogin }) {
             name="username"
             className="w-full mb-4 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             required
-          />
+            />
           <input
             type="password"
             placeholder="Password"
             name="password"
             className="w-full mb-6 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             required
-          />
+            />
           <button
             type="submit"
             className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md w-full transition duration-200 ease-in-out"
-          >
+            >
             Login
           </button>
           <p className="text-center text-gray-600 mt-4">
@@ -145,16 +147,20 @@ function Signup({ onLogin }) {
               type="button"
               onClick={() => setShowLogin(false)}
               className="text-blue-500 hover:text-blue-700 font-semibold cursor-pointer"
-            >
+              >
               Sign Up
             </button>
           </p>
         </form>
       </div>
+      
+              </div>
     );
   }
 
   return (
+    <div className="flex items-center justify-center h-screen bg-gray-100" id="signup-form" style={{ display: 'flex' }}>
+      
     <div className="flex items-center justify-center h-screen bg-gray-100" id="signup-form" style={{ display: 'flex' }}>
       <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm">
         <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">Sign Up</h2>
@@ -166,7 +172,7 @@ function Signup({ onLogin }) {
           onChange={(e) => setEmail(e.target.value)}
           className="w-full mb-4 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           required
-        />
+          />
         <input
           type="text"
           placeholder="Username"
@@ -174,7 +180,7 @@ function Signup({ onLogin }) {
           onChange={(e) => setUsername(e.target.value)}
           className="w-full mb-4 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           required
-        />
+          />
         <input
           type="password"
           placeholder="Password"
@@ -182,11 +188,11 @@ function Signup({ onLogin }) {
           onChange={(e) => setPassword(e.target.value)}
           className="w-full mb-6 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           required
-        />
+          />
         <button
           type="submit"
           className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md w-full transition duration-200 ease-in-out"
-        >
+          >
           Sign Up
         </button>
         <p className="text-center text-gray-600 mt-4">
@@ -195,12 +201,14 @@ function Signup({ onLogin }) {
             type="button"
             onClick={handleShowLogin}
             className="text-blue-500 hover:text-blue-700 font-semibold cursor-pointer"
-          >
+            >
             Login
           </button>
         </p>
       </form>
     </div>
+
+            </div>
   );
 }
 
