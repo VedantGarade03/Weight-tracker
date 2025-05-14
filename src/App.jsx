@@ -153,7 +153,7 @@ function Signup({ onLogin }) {
           </p>
         </form>
       </div>
-      
+
               </div>
     );
   }
@@ -220,7 +220,7 @@ function App() {
   const [heightCm, setHeightCm] = useState(170);
   const [goalWeight, setGoalWeight] = useState(75);
   const [weightHistory, setWeightHistory] = useState([]);
-  
+  const navigate = useNavigate(); // Corrected: Initialize useNavigate
 
   useEffect(() => {
     // Check for a logged-in user in local storage on initial load
@@ -238,7 +238,7 @@ function App() {
   useEffect(() => {
     if (!loggedInUser) return;
 
-    fetch(`${BASE_URL}/weights/${loggedInUser}`) 
+    fetch(`${BASE_URL}/weights/${loggedInUser}`)
       .then(res => res.json())
       .then(data => {
         setWeightHistory(data);
@@ -247,6 +247,8 @@ function App() {
         }
       })
       .catch(err => console.error('Error fetching weights:', err));
+
+    fetchUserProfile(); // Fetch user profile on login
   }, [loggedInUser]);
 
   const saveNewWeight = async (newWeight) => {
@@ -305,6 +307,41 @@ function App() {
     //navigate('/login');
   };
 
+  const fetchUserProfile = async () => {
+    if (!loggedInUser) return;
+    try {
+      const res = await fetch(`${BASE_URL}/users/${loggedInUser}/profile`);
+      if (res.ok) {
+        const data = await res.json();
+        setHeightCm(data.height || 0); // Use 0 as default if height is not available
+        setGoalWeight(data.goalWeight || 0); // Use 0 as default if goalWeight is not available
+      } else {
+        console.error('Failed to fetch user profile');
+      }
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+    }
+  };
+
+  const updateUserProfile = async (newHeight, newGoalWeight) => {
+    if (!loggedInUser) return;
+    try {
+      const res = await fetch(`${BASE_URL}/users/${loggedInUser}/profile`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ height: newHeight, goalWeight: newGoalWeight }),
+      });
+      if (res.ok) {
+        console.log('User profile updated successfully');
+        setHeightCm(newHeight);
+        setGoalWeight(newGoalWeight);
+      } else {
+        console.error('Failed to update user profile');
+      }
+    } catch (error) {
+      console.error('Error updating user profile:', error);
+    }
+  };
   return (
     <div className="App">
       {loggedInUser ? (

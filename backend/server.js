@@ -5,20 +5,18 @@ const { initializeApp } = require('firebase/app');
 const { getFirestore, collection, doc, getDoc, setDoc, updateDoc } = require('firebase/firestore');
 const bcrypt = require('bcrypt');
 
-
-app.use(cors({
-  origin: 'https://weight-tracker-lovat.vercel.app',
-  methods: ['GET', 'POST', 'DELETE'],
-  credentials: true
-}));
-
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+app.use(cors({
+  origin: 'https://weight-tracker-lovat.vercel.app',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Add PUT method
+  credentials: true
+}));
+
 app.use(bodyParser.json());
 
-// Firebase configuration
+// Firebase configuration (same as before)
 const firebaseConfig = {
   apiKey: "AIzaSyBMCCBx1TNxN20TG3lVm8WwSqGk0J09In8",
   authDomain: "weight-tracker03.firebaseapp.com",
@@ -32,9 +30,9 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
 
-// Signup route
+// Signup route (modified)
 app.post('/signup', async (req, res) => {
-  const { email, username, password } = req.body;
+  const { email, username, password, height, goalWeight } = req.body; // Receive height and goalWeight
   try {
     const usersRef = collection(db, 'users');
     const userDoc = await getDoc(doc(usersRef, username));
@@ -49,6 +47,8 @@ app.post('/signup', async (req, res) => {
       email,
       username,
       password: hashedPassword,
+      height,             // Store height
+      goalWeight,         // Store goalWeight
       weights: []
     });
 
@@ -59,7 +59,7 @@ app.post('/signup', async (req, res) => {
   }
 });
 
-// Login route
+// Login route (same as before)
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
   try {
@@ -84,7 +84,7 @@ app.post('/login', async (req, res) => {
   }
 });
 
-// Add new weight entry
+// Add new weight entry (same as before)
 app.post('/weights/:username', async (req, res) => {
   const { username } = req.params;
   const { weight, date } = req.body;
@@ -112,7 +112,7 @@ app.post('/weights/:username', async (req, res) => {
   }
 });
 
-// Delete weight entry
+// Delete weight entry (same as before)
 app.delete('/weights/:username/:id', async (req, res) => {
   const { username, id } = req.params;
 
@@ -136,11 +136,7 @@ app.delete('/weights/:username/:id', async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
-});
-
-// Get weight history for user
+// Get weight history for user (same as before)
 app.get('/weights/:username', async (req, res) => {
   const { username } = req.params;
   try {
@@ -159,4 +155,56 @@ app.get('/weights/:username', async (req, res) => {
   }
 });
 
+// Get user profile (including height and goalWeight)
+app.get('/users/:username/profile', async (req, res) => {
+    const { username } = req.params;
+    try {
+      const userRef = doc(db, 'users', username);
+      const userDoc = await getDoc(userRef);
+  
+      if (!userDoc.exists()) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      const userData = userDoc.data();
+      res.status(200).json({ 
+        username: userData.username,
+        email: userData.email,
+        height: userData.height,
+        goalWeight: userData.goalWeight
+      });
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+      res.status(500).json({ message: 'Failed to fetch user profile' });
+    }
+  });
+  
 
+// Update user profile (height and goal weight)
+app.put('/users/:username/profile', async (req, res) => {
+  const { username } = req.params;
+  const { height, goalWeight } = req.body;
+
+  try {
+    const userRef = doc(db, 'users', username);
+    const userDoc = await getDoc(userRef);
+
+    if (!userDoc.exists()) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    await updateDoc(userRef, {
+      height: height,
+      goalWeight: goalWeight
+    });
+
+    res.status(200).json({ message: 'Profile updated successfully' });
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    res.status(500).json({ message: 'Failed to update profile' });
+  }
+});
+
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
+});
