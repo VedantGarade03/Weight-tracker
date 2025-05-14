@@ -86,27 +86,27 @@ function Signup({ onLogin }) {
   const [error, setError] = useState('');
   const [showLogin, setShowLogin] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
-    if (!username || !password) {
-      setError('Username and password are required');
-      return;
-    }
+        if (!username || !password) {
+            setError('Username and password are required');
+            return;
+        }
 
-    const res = await fetch(`${BASE_URL}/signup`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, username, password, height, goalWeight }),
-    });
+        const res = await fetch(`${BASE_URL}/signup`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, username, password, height, goalWeight }),
+        });
 
-    const data = await res.json();
-    if (res.ok) {
-      onLogin(data.username);
-    } else {
-      setError(data.message || 'Signup failed');
-    }
-  };
+        const data = await res.json();
+        if (res.ok) {
+            onLogin(data.username);
+        } else {
+            setError(data.message || 'Signup failed');
+        }
+    };
 
   const handleShowLogin = () => setShowLogin(true);
 
@@ -127,18 +127,18 @@ function Signup({ onLogin }) {
             name="username"
             className="w-full mb-4 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             required
-          />
+            />
           <input
             type="password"
             placeholder="Password"
             name="password"
             className="w-full mb-6 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             required
-          />
+            />
           <button
             type="submit"
             className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md w-full transition duration-200 ease-in-out"
-          >
+            >
             Login
           </button>
           <p className="text-center text-gray-600 mt-4">
@@ -147,7 +147,7 @@ function Signup({ onLogin }) {
               type="button"
               onClick={() => setShowLogin(false)}
               className="text-blue-500 hover:text-blue-700 font-semibold cursor-pointer"
-            >
+              >
               Sign Up
             </button>
           </p>
@@ -168,7 +168,7 @@ function Signup({ onLogin }) {
           onChange={(e) => setEmail(e.target.value)}
           className="w-full mb-4 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           required
-        />
+          />
         <input
           type="text"
           placeholder="Username"
@@ -176,7 +176,7 @@ function Signup({ onLogin }) {
           onChange={(e) => setUsername(e.target.value)}
           className="w-full mb-4 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           required
-        />
+          />
         <input
           type="password"
           placeholder="Password"
@@ -184,7 +184,7 @@ function Signup({ onLogin }) {
           onChange={(e) => setPassword(e.target.value)}
           className="w-full mb-6 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           required
-        />
+          />
         <input
           type="number"
           placeholder="Height (cm)"
@@ -204,7 +204,7 @@ function Signup({ onLogin }) {
         <button
           type="submit"
           className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md w-full transition duration-200 ease-in-out"
-        >
+          >
           Sign Up
         </button>
         <p className="text-center text-gray-600 mt-4">
@@ -213,7 +213,7 @@ function Signup({ onLogin }) {
             type="button"
             onClick={handleShowLogin}
             className="text-blue-500 hover:text-blue-700 font-semibold cursor-pointer"
-          >
+            >
             Login
           </button>
         </p>
@@ -229,7 +229,7 @@ function App() {
   const [heightCm, setHeightCm] = useState(0);
   const [goalWeight, setGoalWeight] = useState(0);
   const [weightHistory, setWeightHistory] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // Add loading state
 
   useEffect(() => {
     // Check for a logged-in user in local storage on initial load
@@ -237,13 +237,13 @@ function App() {
     if (storedUser) {
       setLoggedInUser(storedUser);
     }
-    setLoading(false);
+    setLoading(false); // Set loading to false after checking local storage
   }, []);
 
   useEffect(() => {
     if (loggedInUser) {
       const fetchData = async () => {
-        setLoading(true);
+        setLoading(true); // Start loading data
         try {
           // Fetch weight history
           const weightRes = await fetch(`${BASE_URL}/weights/${loggedInUser}`);
@@ -265,31 +265,31 @@ function App() {
         } catch (error) {
           console.error('Error fetching data:', error);
         } finally {
-          setLoading(false);
+          setLoading(false); // Stop loading
         }
       };
       fetchData();
     }
   }, [loggedInUser]);
 
-  const saveNewWeight = async (newWeight) => {
-    const today = new Date().toISOString().slice(0, 10);
+    const saveNewWeight = async (newWeight) => {
+        const today = new Date().toISOString().slice(0, 10);
 
-    const res = await fetch(`${BASE_URL}/weights/${loggedInUser}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ weight: newWeight, date: today }),
-    });
+        const res = await fetch(`${BASE_URL}/weights/${loggedInUser}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ weight: newWeight, date: today }),
+        });
 
-    const data = await res.json();
-    if (res.ok) {
-      setWeightHistory(prevHistory => [...prevHistory, data]);
-      setCurrentWeight(newWeight);
-      setShowPopUp(false);
-    } else {
-      console.error('Failed to save weight:', data);
-    }
-  };
+        const data = await res.json();
+        if (res.ok) {
+            setWeightHistory(prevHistory => [...prevHistory, data]);
+            setCurrentWeight(newWeight);
+            setShowPopUp(false);
+        } else {
+            console.error('Failed to save weight:', data);
+        }
+    };
 
   const handleDeleteWeight = async (id) => {
     const res = await fetch(`${BASE_URL}/weights/${loggedInUser}/${id}`, {
@@ -309,45 +309,46 @@ function App() {
   const handleLogin = (username) => {
     setLoggedInUser(username);
     localStorage.setItem('loggedInUser', username);
-    if (document.getElementById('login-form'))
-      document.getElementById('login-form').style.display = 'none';
-    if (document.getElementById('signup-form'))
-      document.getElementById('signup-form').style.display = 'none';
+    // Hide login and signup forms after successful login
+        if (document.getElementById('login-form'))
+            document.getElementById('login-form').style.display = 'none';
+        if (document.getElementById('signup-form'))
+            document.getElementById('signup-form').style.display = 'none';
   };
 
   const handleLogout = () => {
     setLoggedInUser(null);
     localStorage.removeItem('loggedInUser');
-    if (document.getElementById('login-form'))
-      document.getElementById('login-form').style.display = 'block';
-    if (document.getElementById('signup-form'))
-      document.getElementById('signup-form').style.display = 'none';
+        if (document.getElementById('login-form'))
+            document.getElementById('login-form').style.display = 'block';
+        if (document.getElementById('signup-form'))
+            document.getElementById('signup-form').style.display = 'none';
   };
 
-  const updateUserProfile = async (newHeight, newGoalWeight) => {
-    if (!loggedInUser) return;
-    try {
-      const res = await fetch(`${BASE_URL}/users/${loggedInUser}/profile`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ height: newHeight, goalWeight: newGoalWeight }),
-      });
-      if (res.ok) {
-        console.log('User profile updated successfully');
-        setHeightCm(newHeight);
-        setGoalWeight(newGoalWeight);
-      } else {
-        console.error('Failed to update user profile');
-      }
-    } catch (error) {
-      console.error('Error updating user profile:', error);
-    }
-  };
+    const updateUserProfile = async (newHeight, newGoalWeight) => {
+        if (!loggedInUser) return;
+        try {
+            const res = await fetch(`${BASE_URL}/users/${loggedInUser}/profile`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ height: newHeight, goalWeight: newGoalWeight }),
+            });
+            if (res.ok) {
+                console.log('User profile updated successfully');
+                setHeightCm(newHeight);
+                setGoalWeight(newGoalWeight);
+            } else {
+                console.error('Failed to update user profile');
+            }
+        } catch (error) {
+            console.error('Error updating user profile:', error);
+        }
+    };
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <p>Loading...</p>
+        <p>Loading...</p> {/* Simple loading indicator */}
       </div>
     );
   }
@@ -399,6 +400,7 @@ function App() {
             goalWeight={goalWeight}
             heightCm={heightCm}
             setHeightCm={setHeightCm}
+            setGoalWeight={setGoalWeight}
             updateUserProfile={updateUserProfile}
           />
           <WeightHistory weightHistory={weightHistory} onDeleteWeight={handleDeleteWeight} />
