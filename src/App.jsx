@@ -6,6 +6,8 @@ import TrendAndBMI from './components/TrendAndBMI';
 import WeightHistory from './components/WeightHistory';
 import './App.css';
 
+const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 // Login Component
 function Login({ onLogin }) {
   const [username, setUsername] = useState('');
@@ -15,7 +17,7 @@ function Login({ onLogin }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const res = await fetch('https://weight-tracker-4d04.onrender.com/login', {
+    const res = await fetch(`${BASE_URL}/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password }),
@@ -60,11 +62,10 @@ function Login({ onLogin }) {
           Don't have an account?{' '}
           <button
             onClick={() => {
-              // Switch to signup form
               document.getElementById('login-form').style.display = 'none';
               document.getElementById('signup-form').style.display = 'block';
             }}
-            className="text-blue-500 hover:text-blue-700 font-semibold cursor-pointer" // Added cursor-pointer
+            className="text-blue-500 hover:text-blue-700 font-semibold cursor-pointer"
           >
             Sign Up
           </button>
@@ -80,18 +81,17 @@ function Signup({ onLogin }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [showLogin, setShowLogin] = useState(false); // State to toggle between forms
+  const [showLogin, setShowLogin] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Basic validation - you can add more robust validation
     if (!username || !password) {
       setError('Username and password are required');
       return;
     }
 
-    const res = await  fetch('https://weight-tracker-4d04.onrender.com/login', {
+    const res = await fetch(`${BASE_URL}/signup`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, username, password }),
@@ -100,57 +100,29 @@ function Signup({ onLogin }) {
     const data = await res.json();
     if (res.ok) {
       onLogin(data.username);
-      // No navigation here, just update state in parent component if needed
     } else {
       setError(data.message || 'Signup failed');
     }
   };
 
-  // Function to handle switching to the login form
-  const handleShowLogin = () => {
-    setShowLogin(true);
-  };
+  const handleShowLogin = () => setShowLogin(true);
 
   if (showLogin) {
     return (
-      <div className="flex items-center justify-center h-screen bg-gray-100">
-        <form  className="bg-white p-8 rounded-lg shadow-md w-full max-w-sm" onSubmit={(e)=>{
+      <div className="flex items-center justify-center h-screen bg-gray-100" id="signup-form">
+        <form className="bg-white p-8 rounded-lg shadow-md w-full max-w-sm" onSubmit={(e) => {
           e.preventDefault();
           const username = e.target.username.value;
           const password = e.target.password.value;
-          onLogin(username)
+          onLogin(username);
         }}>
           <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
           {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-          <input
-            type="text"
-            placeholder="Username"
-            name='username'
-            className="w-full mb-4 px-4 py-2 border rounded"
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            name = 'password'
-            className="w-full mb-6 px-4 py-2 border rounded"
-            required
-          />
-          <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full"
-          >
-            Login
-          </button>
-          <p className="text-center text-gray-600 mt-4">
-            Don't have an account?{' '}
-            <button
-              type="button" // Change to button type to prevent form submission
-              onClick={() => setShowLogin(false)}
-              className="text-blue-500 hover:text-blue-700 font-semibold cursor-pointer"
-            >
-              Sign Up
-            </button>
+          <input type="text" placeholder="Username" name='username' className="w-full mb-4 px-4 py-2 border rounded" required />
+          <input type="password" placeholder="Password" name='password' className="w-full mb-6 px-4 py-2 border rounded" required />
+          <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">Login</button>
+          <p className="text-center text-gray-600 mt-4">Don't have an account?{' '}
+            <button type="button" onClick={() => setShowLogin(false)} className="text-blue-500 hover:text-blue-700 font-semibold cursor-pointer">Sign Up</button>
           </p>
         </form>
       </div>
@@ -158,49 +130,16 @@ function Signup({ onLogin }) {
   }
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100">
+    <div className="flex items-center justify-center h-screen bg-gray-100" id="signup-form">
       <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md w-full max-w-sm">
         <h2 className="text-2xl font-bold mb-4 text-center">Sign Up</h2>
         {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full mb-4 px-4 py-2 border rounded"
-          required
-        />
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          className="w-full mb-4 px-4 py-2 border rounded"
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full mb-6 px-4 py-2 border rounded"
-          required
-        />
-        <button
-          type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full"
-        >
-          Sign Up
-        </button>
-        <p className="text-center text-gray-600 mt-4">
-          Already have an account?{' '}
-          <button
-            type="button" // Change to button type to prevent form submission
-            onClick={handleShowLogin}
-            className="text-blue-500 hover:text-blue-700 font-semibold cursor-pointer"
-          >
-            Login
-          </button>
+        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full mb-4 px-4 py-2 border rounded" required />
+        <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} className="w-full mb-4 px-4 py-2 border rounded" required />
+        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full mb-6 px-4 py-2 border rounded" required />
+        <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">Sign Up</button>
+        <p className="text-center text-gray-600 mt-4">Already have an account?{' '}
+          <button type="button" onClick={handleShowLogin} className="text-blue-500 hover:text-blue-700 font-semibold cursor-pointer">Login</button>
         </p>
       </form>
     </div>
