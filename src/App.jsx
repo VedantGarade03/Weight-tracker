@@ -229,7 +229,7 @@ function App() {
   useEffect(() => {
     if (!loggedInUser) return;
 
-     fetch('https://weight-tracker-4d04.onrender.com/login') 
+    fetch(`${BASE_URL}/weights/${loggedInUser}`) 
       .then(res => res.json())
       .then(data => {
         setWeightHistory(data);

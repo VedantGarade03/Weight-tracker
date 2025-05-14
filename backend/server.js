@@ -132,3 +132,22 @@ app.delete('/weights/:username/:id', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
+
+// Get weight history for user
+app.get('/weights/:username', async (req, res) => {
+  const { username } = req.params;
+  try {
+    const userRef = doc(db, 'users', username);
+    const userDoc = await getDoc(userRef);
+
+    if (!userDoc.exists()) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const weights = userDoc.data().weights || [];
+    res.status(200).json(weights);
+  } catch (err) {
+    console.error('Failed to fetch weights:', err);
+    res.status(500).json({ message: 'Failed to fetch weights' });
+  }
+});
